@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 module.exports = appInfo => {
-  const config = {};
+  const config = {}
 
   /**
    * some description
@@ -10,7 +10,7 @@ module.exports = appInfo => {
    */
   config.test = {
     key: appInfo.name + '_123456',
-  };
+  }
 
-  return config;
-};
+  return config
+}

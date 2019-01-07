@@ -1,16 +1,16 @@
-'use strict';
+'use strict'
 
-const Service = require('egg').Service;
+const Service = require('egg').Service
 
 class TestService extends Service {
   constructor(ctx) {
-    super(ctx);
-    this.config = this.app.config.test;
+    super(ctx)
+    this.config = this.app.config.test
   }
 
   async get(id) {
-    return { id, name: this.config.key };
+    return { id, name: this.config.key }
   }
 }
 
-module.exports = TestService;
+module.exports = TestService
