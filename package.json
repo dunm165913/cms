@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "egg": "^2.14.2"
+    "egg": "^2.14.2",
+    "eslint-config-prettier": "^3.4.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",
@@ -25,7 +26,7 @@
   },
   "scripts": {
     "dev": "egg-bin dev",
-    "test": "npm run lint -- --fix && egg-bin pkgfiles && npm run test-local",
+    "test": "eslint '**/*.js' && egg-bin pkgfiles && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "prettier-eslint --write '**/*.js'",
@@ -46,10 +47,11 @@
   ],
   "author": "",
   "files": [
+    "index.js",
+    "lib",
     "app",
     "config",
-    "lib",
-    "index.js"
+    "prettier.config.js"
   ],
   "eslintIgnore": [
     "coverage",
