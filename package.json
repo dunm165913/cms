@@ -50,8 +50,7 @@
     "index.js",
     "lib",
     "app",
-    "config",
-    "prettier.config.js"
+    "config"
   ],
   "eslintIgnore": [
     "coverage",
