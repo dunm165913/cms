@@ -1,0 +1,15 @@
+get:
+ responses:
+   200:
+     body:
+      application/json:
+        type: courseDetail
+
+post:
+  securedBy: [ oauth2 ]
+  body:
+    application/json:
+      type: courseDetail
+
+  responses:
+    204:
