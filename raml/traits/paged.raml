@@ -1,0 +1,20 @@
+usage: Apply to long lists
+description: Some long lists need pagination for easy management
+queryParameters:
+  page?:
+    description: Page number
+    type: integer
+    default: 1
+  per?:
+    description: Number of records per page
+    type: integer
+    default: 10
+responses:
+  200:
+    headers:
+      Link:
+        description: |
+          Links to the next, previous, first and last page.
+          It is important to follow this link header values
+          instead of constructing own URLs.
+        example: <https://localhost/api/posts?page=2>; rel="next", <https://localhost/api/posts?page=5>; rel="last"
