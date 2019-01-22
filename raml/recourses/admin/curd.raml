@@ -1,0 +1,51 @@
+securedBy: oauth2
+is: [ adminAuthorized ]
+
+get:
+  description: List admins with pagination
+  is: [ paged ]
+
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items: admin
+
+post:
+  description: Create new admin
+  secureBy: [ oauth2 ]
+
+  body:
+    application/json:
+      type: adminUpdateInfo
+
+  responses:
+    201:
+      body:
+        application/json:
+          type: admin
+
+/{id}:
+  securedBy: oauth2
+
+  patch:
+    description: Update admin information
+    secureBy: [ oauth2 ]
+
+    body:
+      application/json:
+        type: adminUpdateInfo
+
+    responses:
+      200:
+        body:
+          application/json:
+            type: admin
+
+  delete:
+    description: Delete admin
+    secureBy: [ oauth2 ]
+
+    responses:
+      204:

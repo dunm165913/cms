@@ -1,0 +1,15 @@
+post:
+  body:
+    application/json:
+      type: object
+      properties:
+        email: string
+        password: string
+  responses:
+    200:
+      body:
+        application/json:
+          type: object
+          properties:
+            user: user
+            token: token
