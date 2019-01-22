@@ -1,0 +1,53 @@
+securedBy: oauth2
+is: [ adminAuthorized, superAdminOrOwner ]
+
+get:
+    description: List posts
+    queryParameters:
+            postTitle:
+                description: 
+                required: true
+                minLength: 3
+                type: string
+    responses:
+        200:
+            body:
+                application/json:
+                    type: array
+                    items: post
+
+/{id}:
+  get:
+    description: Get detail information of a post
+    responses:
+      200:
+        body:
+          application/json:
+            type: postDetail
+
+  patch:
+    description: Update post
+    body:
+      application/json:
+        type: postSimple
+
+    responses:
+      200:
+        body:
+          application/json:
+            type: postDetail
+      412:
+        body:
+          application/json:
+            type: object
+            properties:
+              isDuplicateCode:
+                description: Return true if `accessCode` already exist
+                type: boolean
+    delete:
+        description: Delete a post
+        responses:
+            200:
+                body:
+                    application/json:
+                        type: post
