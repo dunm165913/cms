@@ -1,0 +1,28 @@
+securedBy: oauth2
+is: [ adminAuthorized ]
+
+get:
+  description: List user with pagination
+  is: [ paged ]
+
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items: user
+
+/{id}:
+    get:
+        description: Get detail information of a user
+        responses:
+        200:
+            body:
+            application/json:
+                type: userDetail
+    delete:
+        description: Delete user
+        secureBy: [ oauth2 ]
+
+        responses:
+        204:

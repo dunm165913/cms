@@ -1,0 +1,14 @@
+post:
+  description: Create new user
+  body:
+    application/json:
+      type: object
+      properties:
+        kind:
+          type: string
+          pattern: ^student|admin$
+        name: string
+        email: string
+        password: string
+  responses:
+    202:

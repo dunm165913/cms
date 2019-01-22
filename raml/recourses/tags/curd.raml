@@ -2,7 +2,7 @@ securedBy: oauth2
 is: [ adminAuthorized, superAdminOrOwner ]
 
 get:
-    description: List posts
+    description: List tags
     queryParameters:
             postTitle:
                 description: 
@@ -14,37 +14,37 @@ get:
             body:
                 application/json:
                     type: array
-                    items: post
+                    items: tag
 
 /{id}:
   get:
-    description: Get detail information of a post
+    description: Get detail information of a tag
     responses:
       200:
         body:
           application/json:
-            type: postDetail
+            type: tagDetail
 
   patch:
-    description: Update post
+    description: Update tag
     body:
       application/json:
-        type: postSimple
+        type: tagSimple
 
     responses:
       200:
         body:
           application/json:
-            type: postDetail
+            type: tagDetail
       412:
         body:
           application/json:
             type: object
             properties:
     delete:
-        description: Delete a post
+        description: Delete a tag
         responses:
             200:
                 body:
                     application/json:
-                        type: post
+                        type: tag
