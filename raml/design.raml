@@ -1,139 +1,29 @@
 #%RAML 1.0
 ---
 title: CMS API
-baseUri: http://localhost/api/
+baseUri: http://localhost/api
 version: 1.0
 
-traits:
+/securitySchemes:
+  oauth2: !include oauth/oauth.raml
+
+/traits:
   paged: !include traits/paged.raml
   adminAuthorized: !include traits/adminAuthorized.raml
-  superAdminAuthorized: !include traits/superAdminAuthorized.raml
-  superAdminOrOwner: !include traits/superAdminOrOwner.raml
+  artistAuthorized: !include traits/superAdminAuthorized.raml
 
+/admins:
+  /: !include resources/admins/crud.raml
+  /login: !include resources/admins/login.raml
 
-/posts:
-    description: Danh sách những bài viết có trong database
-    get:
-        description: Lấy một list những bài viết.
-        queryParameters:
-            postTitle:
-                description: "Sắp xếp theo tên được tìm kiếm"
-                required: true
-                minLength: 3
-                type: string
-                example: "Get L"
-        responses:
-            description: tra ve danh sach bai post
-            200:
-                body:
-                    application/json:
-                        example: |
-                            {
-                                "posts": |
-                                [
-                                    {
-                                        "id": "550e8400-e29b-41d4-a716-446655440000",
-                                        "title": "Get Lucky"
-                                    },
-                                    {
-                                        "id": "550e8400-e29b-41d4-a716-446655440111",
-                                        "title": "Loose yourself to dance"
-                                    },
-                                    {
-                                        "id": "550e8400-e29b-41d4-a716-446655440222",
-                                        "title": "Gio sorgio by Moroder"
-                                    }
-                                ]
-                            }
-    /{postId}:
-        description: Lấy một bài Post theo Id
-            get:
-                description: lấy bài post theo Id  = {postId}
-                responses:
-                    description: thong tin bai post neu duoc tim thay
-                    200:
-                        body:
-                            application/json:
-                                example: |
-                                {
-                                    "id": "550e8400-e29b-41d4-a716-446655440000",
-                                    "title": "Get Lucky",
-                                    "dateCreated": "6:07",
-                                    "content: "This is content of post",
-                                    "artist": |
-                                    {
-                                        "id": "110e8300-e32b-41d4-a716-664400445500"
-                                        "name": "Daft Punk",
-                                    },
-                                    "genre": |
-                                    {
-                                        "id": "183100e3-0e2b-4404-a716-66104d440550",
-                                        "name": "Lean cooking",
-                                    },
-                                    "tags: |
-                                    [
-                                        {
-                                            "id": "183100e3-0e2b-4404-a716-66104d440550"
-                                            "name: "hot"
-                                        },
-                                        {
-                                            "id": "110e8300-e32b-41d4-a716-664400445500"
-                                            "name": "dinner"
-                                        }
-                                    ] 
-                                }
-                    404:
-                        description: khong ton tai post
-                        body:
-                            application/json:
-                                example: |
-                                    {
-                                        "message": "Post not found"
-                                    }
-    post:
-        description: Tạo một bài Post
-        body:
-            description: Gửi lên server một json object với các property của một bài post.
-            application/json:
-                example: |
-                    {
-                        "id": "550e8400-e29b-41d4-a716-446655440000",
-                        "title": "Get Lucky",
-                        "dateCreated": "6:07",
-                        "content: "This is content of post",
-                        "artist": |
-                            {
-                                "id": "110e8300-e32b-41d4-a716-664400445500"
-                            }
-                        "genre": |
-                            {
-                                "id": "183100e3-0e2b-4404-a716-66104d440550"
-                            }
-                        "tag": |
-                            {
-                                "id": "110e8300-e32b-41d4-a716-664400445500"
-                            }
-                    }
-        responses: 
-            201:
-                body:
-                    application/json:
-                        example: |
-                            {
-                                "message": "Create successfully"
-                            }
-            422:
-                body:
-                    properties:
-                        error:
-                    example: |
-                        {
-                            "error": "artist not found!"
-                        }
+/users:
+  /: !include resources/users/curd.raml
+  /signup: !include resources/users/signup.raml
+  /login: !include resources/users/login.raml
+
+/me: !include resources/users/me.raml
+
 /tags:
-    get:
-        description: Danh sách những tags có trong database
-            get:
-                description: Lấy một list những bài viết.
+  /: !include resources/tags/curd.raml
 
 
