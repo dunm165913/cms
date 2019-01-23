@@ -4,6 +4,7 @@ is: [ adminAuthorized ]
 get:
   description: List user with pagination
   is: [ paged ]
+  secureBy: [oauth2]
 
   responses:
     200:

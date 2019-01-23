@@ -1,0 +1,55 @@
+get:
+    description: List posts
+    queryParameters:
+            postTitle:
+                description: 
+                required: true
+                minLength: 3
+                type: string
+    responses:
+        200:
+            body:
+                application/json:
+                    type: array
+                    items: post
+                    example: |
+                            {
+                                "posts": |
+                                [
+                                    {
+                                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                                        "title": "Get Lucky"
+                                    },
+                                    {
+                                        "id": "550e8400-e29b-41d4-a716-446655440111",
+                                        "title": "Loose yourself to dance"
+                                    },
+                                    {
+                                        "id": "550e8400-e29b-41d4-a716-446655440222",
+                                        "title": "Gio sorgio by Moroder"
+                                    }
+                                ]
+                            }
+
+/{tagId}:
+    get:
+        description: Get post from a tag
+        responses:
+            200:
+                body:
+                    application/json:
+                    type: array
+                    items: post
+
+/{artistId}:
+    get:
+        description: Get post form a artist
+        responses:
+            200:
+                body:
+                    application/json:
+                        type: array
+                        items: post
+            404:
+                    
+

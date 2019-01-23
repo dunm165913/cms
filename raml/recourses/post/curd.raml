@@ -1,21 +1,6 @@
 securedBy: oauth2
 is: [ adminAuthorized, superAdminOrOwner ]
 
-get:
-    description: List posts
-    queryParameters:
-            postTitle:
-                description: 
-                required: true
-                minLength: 3
-                type: string
-    responses:
-        200:
-            body:
-                application/json:
-                    type: array
-                    items: post
-
 /{id}:
   get:
     description: Get detail information of a post
@@ -24,6 +9,30 @@ get:
         body:
           application/json:
             type: postDetail
+            example: |
+                                {
+                                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                                    "title": "Get Lucky",
+                                    "dateCreated": "6:07",
+                                    "content: "This is content of post",
+                                    "artist": |
+                                    {
+                                        "id": "110e8300-e32b-41d4-a716-664400445500"
+                                    },
+                                    "genre": |
+                                    {
+                                        "id": "183100e3-0e2b-4404-a716-66104d440550",
+                                    },
+                                    "tags: |
+                                    [
+                                        {
+                                            "id": "183100e3-0e2b-4404-a716-66104d440550"
+                                        },
+                                        {
+                                            "id": "110e8300-e32b-41d4-a716-664400445500"
+                                        }
+                                    ] 
+                                }
 
   patch:
     description: Update post

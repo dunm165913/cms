@@ -1,0 +1,24 @@
+
+description: |
+  API uses OAuth 2 for authentication. An authorization header containing
+  a valid access_token must be included in every request
+describedBy:
+  headers:
+    Authorization?:
+      description: |
+        Used to send a valid OAuth 2 access token. Do not use together with
+        the "access_token" query string parameter
+      pattern: ^Bearer
+  queryParameters?:
+    access_token:
+      description: |
+        Used to send a valid OAuth 2 access token. Do not use together with
+        the "Authorization" header
+  responses:
+    401:
+      description: |
+        Bad or expired token. To fix it, re-authenticate the user.
+    403:
+      description: |
+        Bad OAuth request (e.g. wrong consumer key, bad nonce, expired
+        timestamp, etc.). Unfortunately, re-authenticating the user won't help here.
