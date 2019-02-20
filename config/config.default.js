@@ -16,9 +16,9 @@ module.exports = appInfo => {
 
   config.sequelize = {
     dialect: 'postgres',
-    database: 'cms_be',
+    database: 'egg-sequelize-doc-default',
     host: 'localhost',
-    port: 5432,
+    port: 51015,
     username: 'postgres',
     password: 'postgres',
   }

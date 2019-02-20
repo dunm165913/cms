@@ -18,12 +18,13 @@ get:
 
 /{id}:
   get:
-    description: Get detail information of a tag
+    description: Get all post of that tag.
     responses:
       200:
         body:
           application/json:
-            type: tagDetail
+            type: array
+            items: post
 
   patch:
     description: Update tag
