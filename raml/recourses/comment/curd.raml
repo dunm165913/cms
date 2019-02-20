@@ -1,0 +1,43 @@
+securedBy: oauth2
+is: [ adminAuthorized, artistAuthorized ]
+
+/{post_id}:
+    get:
+        description: get all comment of a post
+        response:
+            200:
+                application/json:
+                type: array
+                items: comment
+            404:
+                description: Post not found.
+    post:
+        description: Create a comment for a post
+        securedBy: [oauth2]
+        
+        body:
+            application/json:
+                type: commentDetail
+                example: |
+                    {
+                        "content": "Kitchen",
+                        post_id: "1",
+                        creater_id: "1"
+                    }
+        response:
+            201:
+                application/json:
+                type: commmentDetail
+    /{id}:
+        patch:
+            description: update a comment:
+
+            body:
+                application/json:
+                    type: comment
+
+        delete:
+            description: Delete a comment
+            body:
+                application/json:
+                    type: comment 
