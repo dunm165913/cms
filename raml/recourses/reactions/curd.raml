@@ -1,0 +1,43 @@
+securedBy: oauth2
+is: [ adminAuthorized, artistAuthorized ]
+
+/{post_id}:
+    get:
+        description: get all reaction of a post
+        response:
+            200:
+                application/json:
+                type: array
+                items: reaction
+            404:
+                description: Post not found.
+    post:
+        description: Create a reaction for a post
+        securedBy: [oauth2]
+        
+        body:
+            application/json:
+                type: reactionDetail
+                example: |
+                    {
+                        "type": "Hate",
+                        post_id: "1",
+                        creater_id: "1"
+                    }
+        response:
+            201:
+                application/json:
+                type: reactionDetail
+    /{id}:
+        patch:
+            description: update a reaction:
+
+            body:
+                application/json:
+                    type: reaction
+
+        delete:
+            description: Delete a reaction
+            body:
+                application/json:
+                    type: reaction 
