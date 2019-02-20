@@ -1,5 +1,12 @@
 # be
 
+## Migrate Database
+
+```bash
+$ npm i
+$ npx sequelize db:migrate
+```
+Note: Change variable enviroment (plugin.js, config.json, config.default.js)
 
 
 ## QuickStart
