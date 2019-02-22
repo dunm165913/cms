@@ -6,5 +6,7 @@ module.exports = {
     await queryInterface.addColumn('posts', 'content', Sequelize.TEXT)
   },
 
-  down: async (queryInterface, Sequelize) => {},
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.addColumn('posts', 'content', Sequelize.TEXT)
+  },
 }

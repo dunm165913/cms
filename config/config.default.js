@@ -20,7 +20,7 @@ module.exports = appInfo => {
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: '65343743',
+    password: 'postgres',
   }
 
   return config

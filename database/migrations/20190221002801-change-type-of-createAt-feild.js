@@ -6,13 +6,8 @@ module.exports = {
     await queryInterface.removeColumn('users', 'createAt')
   },
 
-  down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.addColumn('users', 'createAt', Sequelize.TIME)
+    await queryInterface.removeColumn('posts', 'createAt')
   },
 }
