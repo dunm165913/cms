@@ -26,7 +26,12 @@ class PostController extends Controller {
     const req = ctx.request.body
     const isLogined = isLogin(ctx)
 
-    if (isLogined.role === 'admin' && req.content.length > 0 && req.tag_id > 0 && req.title.length > 0) {
+    if (
+      isLogined.role === 'admin' &&
+      req.content.length > 0 &&
+      req.tag_id > 0 &&
+      req.title.length > 0
+    ) {
       await this.ctx.model.Post.create({
         content: req.content,
         tag: req.tag_id,
@@ -34,7 +39,6 @@ class PostController extends Controller {
         user_id: isLogined.id,
       })
       this.ctx.status = 200
-
     } else {
       this.ctx.status = 204
     }
@@ -42,29 +46,51 @@ class PostController extends Controller {
   async destroy() {
     const isLogined = isLogin(this.ctx)
     if (isLogined.role === 'admin') {
-      const post = await this.ctx.model.Post.findById(toInt(this.ctx.params.id));
+      const post = await this.ctx.model.Post.findById(toInt(this.ctx.params.id))
       if (post) {
         post.destroy()
         this.ctx.status = 200
       }
-      this.ctx.status = 400
+      this.ctx.status = 204
     }
-    this.ctx.status = 400
+    this.ctx.status = 204
   }
   async index() {
-    const post = await this.ctx.model.Post.findAll()
+    const post = await this.ctx.model.Post.findAll({
+      attributes: ['id', 'title', 'tag'],
+      // limit: 2,
+    })
     this.ctx.status = 200
     this.ctx.body = post
   }
-
-  // async update() {
-
-  // }
-  // async new() {
-
-  // }
-  // async edit() {
-
-  // }
+  async delete() {
+    const isLogined = isLogin(this.ctx)
+    if (isLogined.role === 'admin') {
+      const post = await this.ctx.model.Post.findById(toInt(this.ctx.request.body.id))
+      if (post) {
+        post.destroy()
+        this.ctx.status = 200
+        console.log(this.ctx.status)
+      } else this.ctx.status = 204
+    } else this.ctx.status = 204
+  }
+  async update() {
+    const user = isLogin(this.ctx)
+    if (user.role === 'admin') {
+      await this.ctx.model.Post.update(
+        {
+          title: this.ctx.request.body.title,
+          content: this.ctx.request.body.content,
+          tag: this.ctx.request.body.tag,
+        },
+        {
+          where: {
+            id: this.ctx.params.id,
+          },
+        },
+      )
+      this.ctx.status = 200
+    } else this.ctx.status = 204
+  }
 }
 module.exports = PostController

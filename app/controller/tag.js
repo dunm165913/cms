@@ -32,15 +32,14 @@ class TagController extends Controller {
   async create() {
     const req = this.ctx.request.body
     const user = isLogin(this.ctx)
-console.log(this.ctx.headers)
+    console.log(user)
     if (user.role === 'admin' && req.name.length > 0) {
-      console.log(req)
+      // console.log(req)
       await this.ctx.model.Tag.create({
-        name: req.name
+        name: req.name,
       })
       this.ctx.status = 200
-    }
-    else this.ctx.status = 400
+    } else this.ctx.status = 204
   }
   async destroy() {
     const isLogined = isLogin(this.ctx)
@@ -55,6 +54,36 @@ console.log(this.ctx.headers)
       this.ctx.status = 204
     }
   }
-
+  async delete() {
+    const isLogined = isLogin(this.ctx)
+    if (isLogined.role === 'admin') {
+      const id = toInt(this.ctx.request.body.id)
+      const rs = await this.ctx.model.Tag.findById(id)
+      if (rs) {
+        rs.destroy()
+        this.ctx.status = 200
+      } else {
+        this.ctx.status = 204
+      }
+    } else {
+      this.ctx.status = 204
+    }
+  }
+  async update() {
+    const user = isLogin(this.ctx)
+    if (user.role === 'admin') {
+      await this.ctx.model.Tag.update(
+        {
+          name: this.ctx.request.body.name,
+        },
+        {
+          where: {
+            id: this.ctx.params.id,
+          },
+        },
+      )
+      this.ctx.status = 200
+    } else this.ctx.status = 204
+  }
 }
 module.exports = TagController

@@ -8,4 +8,6 @@ module.exports = app => {
   router.resources('comments', '/comments', controller.comment)
   router.post('/users/login', controller.user.login)
   router.post('/admin/login', controller.admin.login)
+  router.post('/tags/delete', controller.tag.delete)
+  router.post('/posts/delete', controller.post.delete)
 }

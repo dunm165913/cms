@@ -86,8 +86,8 @@ class AdminController extends Controller {
       console.log(user)
       const user_found = await this.ctx.model.User.findAll({
         where: {
-          email: user.email
-        }
+          email: user.email,
+        },
       })
       if (user_found.length === 0) {
         await this.ctx.model.User.create({
@@ -100,7 +100,7 @@ class AdminController extends Controller {
       } else {
         this.ctx.status = 204
         this.ctx.body = {
-          me: 'email dc su dung'
+          me: 'email dc su dung',
         }
       }
     } else {

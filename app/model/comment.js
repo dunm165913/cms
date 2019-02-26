@@ -1,5 +1,5 @@
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize
+  const { STRING, INTEGER } = app.Sequelize
   const Comment = app.model.define(
     'comment',
     {

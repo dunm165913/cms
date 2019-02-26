@@ -1,7 +1,5 @@
-
 const Controller = require('egg').Controller
 const jwt = require('jsonwebtoken')
-// const bcrypt = require('bcryptjs')
 const verify = 'CMS_JavaScript_team'
 
 function isLogin(ctx) {
@@ -36,9 +34,9 @@ class CommentController extends Controller {
       const id = toInt(this.ctx.params.id)
       const rs = await this.ctx.model.Comment.findById(id)
       rs.destroy()
-      this.ctx.status = 201
+      this.ctx.status = 200
     } else {
-      this.ctx.status = 400
+      this.ctx.status = 204
     }
   }
   async create() {
@@ -51,12 +49,10 @@ class CommentController extends Controller {
         post_id: req.post_id,
         creator_id: isLogined.id,
       })
+      this.ctx.status = 200
     } else {
-      this.ctx.body = {
-        message: 'zvdvdv',
-      }
+      this.ctx.status = 204
     }
   }
-
 }
 module.exports = CommentController
