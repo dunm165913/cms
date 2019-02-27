@@ -3,6 +3,7 @@
 ## Migrate Database
 
 ```bash
+$ create empty database with name "cms_be"
 $ npm i
 $ npx sequelize db:migrate
 ```
