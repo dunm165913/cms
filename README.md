@@ -1,6 +1,5 @@
 # be
 
-## Migrate Database
 
 ```bash
 $ create empty database with name "cms_be"
@@ -9,8 +8,6 @@ $ npx sequelize db:migrate
 ```
 Note: Change variable enviroment (plugin.js, config.json, config.default.js)
 
-
-## QuickStart
 
 ```bash
 $ npm install

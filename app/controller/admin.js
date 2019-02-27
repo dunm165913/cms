@@ -18,10 +18,15 @@ function toInt(str) {
   return parseInt(str, 10) || 0
 }
 
-class UserController extends Controller {
+class AdminController extends Controller {
   async show() {
-    const rs = await this.ctx.model.User.findAll()
+    const rs = await this.ctx.model.Tag.findById(toInt(this.ctx.params.id))
+    console.log(rs)
     this.ctx.body = rs
+  }
+
+  async index() {
+    this.ctx.body = await this.ctx.model.Tag.findAll()
   }
   async destroy() {
     const isLogined = isLogin(this.ctx)
@@ -37,7 +42,7 @@ class UserController extends Controller {
   }
   async login() {
     const req = this.ctx.request.body
-    console.log(req)
+    // console.log(req)
     if (req.email.length > 6 && req.password.length > 6) {
       const rs = await this.ctx.model.User.findAll({
         where: { email: req.email },
@@ -75,25 +80,32 @@ class UserController extends Controller {
   }
 
   async create() {
-    const user = this.ctx.request.body
-    const user_found = await this.ctx.model.User.findAll({
-      where: {
-        email: user.email,
-      },
-    })
-    if (user_found.length === 0) {
-      await this.ctx.model.User.create({
-        email: user.email,
-        password: bcrypt.hashSync(user.password),
-        username: user.username,
-        role: 'student',
+    const isLogined = isLogin(this.ctx)
+    if (isLogined.role === 'admin') {
+      const user = this.ctx.request.body
+      console.log(user)
+      const user_found = await this.ctx.model.User.findAll({
+        where: {
+          email: user.email,
+        },
       })
-      this.ctx.status = 200
-    } else {
-      this.ctx.body = {
-        me: 'email dc su dung',
+      if (user_found.length === 0) {
+        await this.ctx.model.User.create({
+          email: user.email,
+          password: bcrypt.hashSync(user.password),
+          username: user.username,
+          role: 'admin',
+        })
+        this.ctx.status = 200
+      } else {
+        this.ctx.status = 204
+        this.ctx.body = {
+          me: 'email dc su dung',
+        }
       }
+    } else {
+      this.ctx.status = 204
     }
   }
 }
-module.exports = UserController
+module.exports = AdminController
