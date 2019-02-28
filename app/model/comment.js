@@ -6,7 +6,6 @@ module.exports = app => {
       post_id: INTEGER,
       content: STRING,
       creator_id: INTEGER,
-
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     },
     {

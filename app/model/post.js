@@ -1,12 +1,12 @@
 module.exports = app => {
-  const { STRING, INTEGER } = app.Sequelize
+  const { STRING, INTEGER, DATE } = app.Sequelize
   const Post = app.model.define(
     'post',
     {
       user_id: STRING,
       content: STRING,
       title: STRING,
-      tag: INTEGER,
+      createAt: { type: DATE, allowNull: false },
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     },
     {

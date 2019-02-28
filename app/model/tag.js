@@ -4,7 +4,6 @@ module.exports = app => {
     'tag',
     {
       name: STRING,
-
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     },
     {
