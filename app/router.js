@@ -15,9 +15,11 @@ module.exports = app => {
   router.post('/api/users', controller.user.create)
 
   router.get('/api/posts', controller.post.index)
+  router.get('/api/posts/:id', controller.post.show)
   router.post('/api/posts', controller.post.create)
 
   router.get('/api/tags', controller.tag.index)
+  router.get('/api/tags/:id', controller.tag.show)
   router.post('/api/tags', controller.tag.create)
 
   router.get('/api/post-tag', controller.posttag.index)

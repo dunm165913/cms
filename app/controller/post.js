@@ -34,16 +34,15 @@ class PostController extends Controller {
       },
     })
     // get tags
-    const postTags = await ctx.mode.PostTag.findAll({
+    const postTags = await ctx.model.Posttag.findAll({
       where: {
         post_id: toInt(ctx.params.id),
       },
     })
-    const tags = await ctx.model.Tag.findAll({
-      where: {
-        post_id: postTags.post_id,
-      },
-    })
+
+    const tags = []
+    for (const postTag of postTags) tags.push(await ctx.model.Tag.findById(postTag.tag_id))
+
     // get post
     const post = await ctx.model.Post.findById(toInt(ctx.params.id))
     if (!post) {
@@ -56,9 +55,9 @@ class PostController extends Controller {
       title: post.title,
       content: post.content,
       createAt: post.createAt,
-      tags: [...tags],
-      comments: [...comments],
-      reactions: [...reactions],
+      tags: ([] = [...tags]),
+      comments: ([] = [...comments]),
+      reactions: ([] = [...reactions]),
     }
   }
 

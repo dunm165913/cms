@@ -20,10 +20,29 @@ function toInt(str) {
 }
 
 class TagController extends Controller {
+  // get a tag instance and all post of this tag.
   async show() {
-    const rs = await this.ctx.model.Tag.findById(toInt(this.ctx.params.id))
-    console.log(rs)
-    this.ctx.body = rs
+    const ctx = this.ctx
+    const tag = await ctx.model.Tag.findById(toInt(ctx.params.id))
+    if (!tag) {
+      ctx.status = 404
+      return
+    }
+    const postTags = await ctx.model.Posttag.findAll({
+      where: {
+        tag_id: tag.id,
+      },
+    })
+    const posts = []
+    for (const postTag of postTags) {
+      posts.push(await ctx.model.Post.findById(postTag.post_id))
+    }
+
+    ctx.body = {
+      id: tag.id,
+      name: tag.name,
+      posts: [...posts],
+    }
   }
 
   async index() {
