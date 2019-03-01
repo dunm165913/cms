@@ -4,8 +4,9 @@ const Controller = require('egg').Controller
 
 class PostTagController extends Controller {
   async index() {
-    const query = { limit: this.ctx.query.limit, offset: this.ctx.query.offset }
-    this.ctx.body = this.ctx.model.PostTag.findAll(query)
+    const ctx = this.ctx
+    const query = { limit: ctx.query.limit, offset: ctx.query.offset }
+    ctx.body = await ctx.model.Posttag.findAll(query)
   }
 
   async create() {

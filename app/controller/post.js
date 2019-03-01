@@ -77,7 +77,7 @@ class PostController extends Controller {
     ctx.body = await ctx.model.Post.create({
       content: req.content,
       title: req.title,
-      createAt: date,
+      create_at: date,
       user_id: req.user_id,
       // user_id: isLogined.id,
     })

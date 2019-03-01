@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER } = Sequelize
-    await queryInterface.createTable('posttag', {
+    await queryInterface.createTable('posttags', {
       post_id: {
         type: INTEGER,
         primaryKey: true,
