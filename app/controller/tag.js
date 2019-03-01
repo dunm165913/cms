@@ -27,19 +27,20 @@ class TagController extends Controller {
   }
 
   async index() {
-    this.ctx.body = await this.ctx.model.Tag.findAll()
+    const query = { limit: this.ctx.query.limit, offset: this.ctx.query.offset }
+    this.ctx.body = await this.ctx.model.Tag.findAll(query)
   }
   async create() {
     const req = this.ctx.request.body
-    const user = isLogin(this.ctx)
-    console.log(user)
-    if (user.role === 'admin' && req.name.length > 0) {
-      // console.log(req)
-      await this.ctx.model.Tag.create({
-        name: req.name,
-      })
-      this.ctx.status = 200
-    } else this.ctx.status = 204
+    // const user = isLogin(this.ctx)
+    // console.log(user)
+    // if (user.role === 'admin' && req.name.length > 0) {
+    // console.log(req)
+    this.ctx.body = await this.ctx.model.Tag.create({
+      name: req.name,
+    })
+    //   this.ctx.status = 200
+    // } else this.ctx.status = 204
   }
   async destroy() {
     const isLogined = isLogin(this.ctx)

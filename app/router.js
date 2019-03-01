@@ -10,4 +10,16 @@ module.exports = app => {
   router.post('/admin/login', controller.admin.login)
   router.post('/tags/delete', controller.tag.delete)
   router.post('/posts/delete', controller.post.delete)
+
+  router.get('/api/users', controller.user.index)
+  router.post('/api/users', controller.user.create)
+
+  router.get('/api/posts', controller.post.index)
+  router.post('/api/posts', controller.post.create)
+
+  router.get('/api/tags', controller.tag.index)
+  router.post('/api/tags', controller.tag.create)
+
+  router.get('/api/post-tag', controller.posttag.index)
+  router.post('/api/post-tag', controller.posttag.create)
 }

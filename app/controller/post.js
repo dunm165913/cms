@@ -16,33 +16,78 @@ function toInt(str) {
   if (!str) return str
   return parseInt(str, 10) || 0
 }
+
 class PostController extends Controller {
+  // get a post instance and get all tag, comment, reaction of this post.
   async show() {
     const ctx = this.ctx
-    ctx.body = await ctx.model.Post.findById(toInt(ctx.params.id))
+    // get comments
+    const comments = await ctx.model.Comment.findAll({
+      where: {
+        post_id: toInt(ctx.params.id),
+      },
+    })
+    // get reactions
+    const reactions = await ctx.model.Reaction.findAll({
+      where: {
+        post_id: toInt(ctx.params.id),
+      },
+    })
+    // get tags
+    const postTags = await ctx.mode.PostTag.findAll({
+      where: {
+        post_id: toInt(ctx.params.id),
+      },
+    })
+    const tags = await ctx.model.Tag.findAll({
+      where: {
+        post_id: postTags.post_id,
+      },
+    })
+    // get post
+    const post = await ctx.model.Post.findById(toInt(ctx.params.id))
+    if (!post) {
+      ctx.status = 404
+      return
+    }
+    // return acture post
+    ctx.body = {
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      createAt: post.createAt,
+      tags: [...tags],
+      comments: [...comments],
+      reactions: [...reactions],
+    }
   }
+
   async create() {
     const ctx = this.ctx
     const req = ctx.request.body
-    const isLogined = isLogin(ctx)
+    // const isLogined = isLogin(ctx)
 
-    if (
-      isLogined.role === 'admin' &&
-      req.content.length > 0 &&
-      req.tag_id > 0 &&
-      req.title.length > 0
-    ) {
-      await this.ctx.model.Post.create({
-        content: req.content,
-        tag: req.tag_id,
-        title: req.title,
-        user_id: isLogined.id,
-      })
-      this.ctx.status = 200
-    } else {
-      this.ctx.status = 204
-    }
+    // if (
+    //   isLogined.role === 'admin' &&
+    //   req.content.length > 0 &&
+    //   req.tag_id > 0 &&
+    //   req.title.length > 0
+    // ) {
+    const date = new Date(Date.now())
+    ctx.body = await ctx.model.Post.create({
+      content: req.content,
+      title: req.title,
+      createAt: date,
+      user_id: req.user_id,
+      // user_id: isLogined.id,
+    })
+    //   ctx.status = 200
+    // } else {
+    //   ctx.status = 204
+    // }
   }
+
+  // destroy cái này phải destroy toàn bộ những feld có reference tới nó trước.
   async destroy() {
     const isLogined = isLogin(this.ctx)
     if (isLogined.role === 'admin') {
@@ -56,12 +101,11 @@ class PostController extends Controller {
     this.ctx.status = 204
   }
   async index() {
-    const post = await this.ctx.model.Post.findAll({
-      attributes: ['id', 'title', 'tag'],
-      // limit: 2,
-    })
-    this.ctx.status = 200
-    this.ctx.body = post
+    const ctx = this.ctx
+    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) }
+    const post = await ctx.model.Post.findAll(query)
+    ctx.status = 200
+    ctx.body = post
   }
   async delete() {
     const isLogined = isLogin(this.ctx)

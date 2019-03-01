@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER } = Sequelize
-    await queryInterface.createTable('post-tag', {
+    await queryInterface.createTable('posttag', {
       post_id: {
         type: INTEGER,
         primaryKey: true,
@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('post-tag')
+    await queryInterface.dropTable('poststags')
   },
 }

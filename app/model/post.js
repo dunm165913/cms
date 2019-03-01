@@ -3,7 +3,7 @@ module.exports = app => {
   const Post = app.model.define(
     'post',
     {
-      user_id: STRING,
+      user_id: INTEGER,
       content: STRING,
       title: STRING,
       createAt: { type: DATE, allowNull: false },

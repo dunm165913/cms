@@ -23,6 +23,13 @@ class UserController extends Controller {
     const rs = await this.ctx.model.User.findAll()
     this.ctx.body = rs
   }
+
+  async index() {
+    const ctx = this.ctx
+    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) }
+    ctx.body = await ctx.model.User.findAll(query)
+  }
+
   async destroy() {
     const isLogined = isLogin(this.ctx)
     console.log(isLogined)
@@ -82,12 +89,17 @@ class UserController extends Controller {
       },
     })
     if (user_found.length === 0) {
-      await this.ctx.model.User.create({
-        email: user.email,
-        password: bcrypt.hashSync(user.password),
-        username: user.username,
-        role: 'student',
-      })
+      if (!user.role)
+        await this.ctx.model.User.create({
+          email: user.email,
+          password: bcrypt.hashSync(user.password),
+          name: user.name,
+          role: 'student',
+        })
+      else {
+        this.ctx.model.User.create(user)
+        console.log(user)
+      }
       this.ctx.status = 200
     } else {
       this.ctx.body = {

@@ -1,6 +1,6 @@
 module.exports = app => {
   const { INTEGER } = app.Sequelize
-  const PostTag = app.model.define('post-tag', {
+  const Post_Tag = app.model.define('post-tag', {
     post_id: {
       type: INTEGER,
       primaryKey: true,
@@ -18,4 +18,5 @@ module.exports = app => {
       },
     },
   })
+  return Post_Tag
 }

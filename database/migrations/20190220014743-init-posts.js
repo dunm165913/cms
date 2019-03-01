@@ -7,7 +7,7 @@ module.exports = {
       id: { type: INTEGER, autoIncrement: true, primaryKey: true },
       title: { type: STRING(255), allowNull: false },
       content: { type: STRING, allowNull: false },
-      createAt: { type: DATE, allowNull: false },
+      create_at: { type: DATE, allowNull: false },
       user_id: {
         type: INTEGER,
         references: {
