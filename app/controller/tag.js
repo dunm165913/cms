@@ -37,12 +37,7 @@ class TagController extends Controller {
     for (const postTag of postTags) {
       posts.push(await ctx.model.Post.findById(postTag.post_id))
     }
-
-    ctx.body = {
-      id: tag.id,
-      name: tag.name,
-      posts: [...posts],
-    }
+    ctx.body = Object.assign({}, tag.dataValues, { posts: ([] = [...posts]) })
   }
 
   async index() {

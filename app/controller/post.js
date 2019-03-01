@@ -50,15 +50,11 @@ class PostController extends Controller {
       return
     }
     // return acture post
-    ctx.body = {
-      id: post.id,
-      title: post.title,
-      content: post.content,
-      createAt: post.createAt,
+    ctx.body = Object.assign({}, post.dataValues, {
       tags: ([] = [...tags]),
       comments: ([] = [...comments]),
       reactions: ([] = [...reactions]),
-    }
+    })
   }
 
   async create() {
@@ -73,13 +69,12 @@ class PostController extends Controller {
     //   req.title.length > 0
     // ) {
     const date = new Date(Date.now())
-    ctx.body = await ctx.model.Post.create({
-      content: req.content,
-      title: req.title,
-      create_at: date,
-      user_id: req.user_id,
-      // user_id: isLogined.id,
-    })
+    ctx.body = await ctx.model.Post.create(
+      Object.assign({}, req, {
+        create_at: date,
+        // user_id: isLogined.id,
+      }),
+    )
     //   ctx.status = 200
     // } else {
     //   ctx.status = 204
