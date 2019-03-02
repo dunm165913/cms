@@ -20,41 +20,12 @@ function toInt(str) {
 class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
-    const ctx = this.ctx
-    // get comments
-    const comments = await ctx.model.Comment.findAll({
-      where: {
-        post_id: toInt(ctx.params.id),
-      },
-    })
-    // get reactions
-    const reactions = await ctx.model.Reaction.findAll({
-      where: {
-        post_id: toInt(ctx.params.id),
-      },
-    })
-    // get tags
-    const postTags = await ctx.model.Posttag.findAll({
-      where: {
-        post_id: toInt(ctx.params.id),
-      },
-    })
-
-    const tags = []
-    for (const postTag of postTags) tags.push(await ctx.model.Tag.findById(postTag.tag_id))
-
-    // get post
-    const post = await ctx.model.Post.findById(toInt(ctx.params.id))
+    const post = await this.ctx.service.post.find(toInt(this.ctx.params.id))
     if (!post) {
-      ctx.status = 404
+      this.ctx.status = 404
       return
     }
-    // return acture post
-    ctx.body = Object.assign({}, post.dataValues, {
-      tags: ([] = [...tags]),
-      comments: ([] = [...comments]),
-      reactions: ([] = [...reactions]),
-    })
+    this.ctx.body = post
   }
 
   async create() {
@@ -95,11 +66,7 @@ class PostController extends Controller {
     this.ctx.status = 204
   }
   async index() {
-    const ctx = this.ctx
-    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) }
-    const post = await ctx.model.Post.findAll(query)
-    ctx.status = 200
-    ctx.body = post
+    this.ctx.body = await this.ctx.service.post.getAll()
   }
   async delete() {
     const isLogined = isLogin(this.ctx)
