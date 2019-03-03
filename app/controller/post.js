@@ -20,7 +20,7 @@ function toInt(str) {
 class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
-    const post = await this.ctx.service.post.find(toInt(this.ctx.params.id))
+    const post = await this.ctx.service.post.findPostObject(toInt(this.ctx.params.id))
     if (!post) {
       this.ctx.status = 404
       return

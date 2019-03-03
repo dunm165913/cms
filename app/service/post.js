@@ -15,35 +15,31 @@ class PostService extends Service {
     return ctx.model.Post.findAll(query)
   }
 
-  async find(postId) {
+  async findPostObject(post_id) {
     const ctx = this.ctx
-    const post = await ctx.model.Post.findById(postId)
+    const post = await this.findPostById(post_id)
     if (!post) {
       return
     }
-    const comments = await ctx.model.Comment.findAll({
-      where: {
-        post_id: toInt(postId),
-      },
-    })
-    const reactions = await ctx.model.Reaction.findAll({
-      where: {
-        post_id: toInt(postId),
-      },
-    })
-    const postTags = await ctx.model.Posttag.findAll({
-      where: {
-        post_id: toInt(postId),
-      },
-    })
+    const comments = await ctx.service.comment.getCommentsOfPost(post.id)
+    const reactions = await ctx.service.reaction.getReactionsOfaPost(post.id)
+    const postTags = await ctx.service.posttag.getTagsOfaPost(post.id)
     const tags = []
-    for (const postTag of postTags) tags.push(await ctx.model.Tag.findById(postTag.tag_id))
+    for (const postTag of postTags) tags.push(await ctx.service.tag.getTagForAPost(postTag.tag_id))
     // return acture post
     return Object.assign({}, post.dataValues, {
       tags: ([] = [...tags]),
       comments: ([] = [...comments]),
       reactions: ([] = [...reactions]),
     })
+  }
+
+  async findPostById(post_id) {
+    const post = await this.ctx.model.Post.findById(post_id)
+    if (!post) {
+      return
+    }
+    return post
   }
 }
 

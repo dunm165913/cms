@@ -23,21 +23,12 @@ class TagController extends Controller {
   // get a tag instance and all post of this tag.
   async show() {
     const ctx = this.ctx
-    const tag = await ctx.model.Tag.findById(toInt(ctx.params.id))
+    const tag = await ctx.service.tag.getTagObject(toInt(ctx.params.id))
     if (!tag) {
       ctx.status = 404
       return
     }
-    const postTags = await ctx.model.Posttag.findAll({
-      where: {
-        tag_id: tag.id,
-      },
-    })
-    const posts = []
-    for (const postTag of postTags) {
-      posts.push(await ctx.model.Post.findById(postTag.post_id))
-    }
-    ctx.body = Object.assign({}, tag.dataValues, { posts: ([] = [...posts]) })
+    ctx.body = tag
   }
 
   async index() {
