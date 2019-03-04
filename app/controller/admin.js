@@ -21,12 +21,12 @@ function toInt(str) {
 class AdminController extends Controller {
   async show() {
     const rs = await this.ctx.model.Tag.findById(toInt(this.ctx.params.id))
-    console.log(rs)
     this.ctx.body = rs
   }
 
   async index() {
-    this.ctx.body = await this.ctx.model.Tag.findAll()
+    const query ={limit: this.ctx.query.limit, offset: this.ctx.query.offset};
+    this.ctx.body = await this.ctx.model.Tag.findAll(query)
   }
   async destroy() {
     const isLogined = isLogin(this.ctx)
@@ -40,6 +40,7 @@ class AdminController extends Controller {
       this.ctx.status = 400
     }
   }
+
   async login() {
     const req = this.ctx.request.body
     // console.log(req)
@@ -80,10 +81,8 @@ class AdminController extends Controller {
   }
 
   async create() {
-    const isLogined = isLogin(this.ctx)
-    if (isLogined.role === 'admin') {
       const user = this.ctx.request.body
-      console.log(user)
+
       const user_found = await this.ctx.model.User.findAll({
         where: {
           email: user.email,
@@ -93,7 +92,7 @@ class AdminController extends Controller {
         await this.ctx.model.User.create({
           email: user.email,
           password: bcrypt.hashSync(user.password),
-          username: user.username,
+          name: user.username,
           role: 'admin',
         })
         this.ctx.status = 200
@@ -103,9 +102,6 @@ class AdminController extends Controller {
           me: 'email dc su dung',
         }
       }
-    } else {
-      this.ctx.status = 204
-    }
   }
 }
 module.exports = AdminController

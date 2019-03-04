@@ -31,25 +31,25 @@ class PostController extends Controller {
   async create() {
     const ctx = this.ctx
     const req = ctx.request.body
-    // const isLogined = isLogin(ctx)
+    const isLogined = isLogin(ctx)
 
-    // if (
-    //   isLogined.role === 'admin' &&
-    //   req.content.length > 0 &&
-    //   req.tag_id > 0 &&
-    //   req.title.length > 0
-    // ) {
+    if (
+      isLogined.role === 'admin' &&
+      req.content.length > 0 &&
+      req.tag_id > 0 &&
+      req.title.length > 0
+    ) {
     const date = new Date(Date.now())
     ctx.body = await ctx.model.Post.create(
       Object.assign({}, req, {
         create_at: date,
-        // user_id: isLogined.id,
+        user_id: isLogined.id,
       }),
     )
-    //   ctx.status = 200
-    // } else {
-    //   ctx.status = 204
-    // }
+      ctx.status = 200
+    } else {
+      ctx.status = 204
+    }
   }
 
   // destroy cái này phải destroy toàn bộ những feld có reference tới nó trước.
