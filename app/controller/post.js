@@ -25,17 +25,19 @@ function toInt(str) {
 class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
-    const post = await this.ctx.service.post.findById(toInt(this.ctx.params.id))
+    const ctx = this.ctx
+    const post = await ctx.service.post.findById(toInt(this.ctx.params.id))
     if (!post) {
       this.ctx.status = 404
       return
     }
+
     const comments = await ctx.service.comment.getCommentsOfPost(post.id)
     const reactions = await ctx.service.reaction.getReactionsOfaPost(post.id)
     const postTags = await ctx.service.posttag.getTagsOfaPost(post.id)
     const tags = []
-    for (const postTag of postTags) tags.push(await ctx.service.tag.getTagForAPost(postTag.tag_id))
-    return Object.assign({}, post.dataValues, {
+    for (const postTag of postTags) tags.push(await ctx.service.tag.findById(postTag.tag_id))
+    ctx.body = Object.assign({}, post.dataValues, {
       tags: ([] = [...tags]),
       comments: ([] = [...comments]),
       reactions: ([] = [...reactions]),
@@ -101,7 +103,6 @@ class PostController extends Controller {
         {
           title: this.ctx.request.body.title,
           content: this.ctx.request.body.content,
-          tag: this.ctx.request.body.tag,
         },
         {
           where: {
@@ -109,6 +110,8 @@ class PostController extends Controller {
           },
         },
       )
+      // xoa het posttag voi id tag
+      // sau do tao lai posttag
       this.ctx.status = 200
     } else this.ctx.status = 204
   }

@@ -63,6 +63,8 @@ class AdminController extends Controller {
         )
         return (this.ctx.body = {
           token,
+          id: rs[0].dataValues.id,
+          name: rs[0].dataValues.name,
         })
       }
       if (rs.length === 0) {
@@ -89,11 +91,16 @@ class AdminController extends Controller {
       },
     })
     if (user_found.length === 0) {
-      await this.ctx.model.User.create({
+      const rs = await this.ctx.model.User.create({
         email: user.email,
         password: bcrypt.hashSync(user.password),
         name: user.username,
         role: 'admin',
+      })
+
+      await this.ctx.model.Tag.create({
+        name: 'undefined',
+        user_id: rs.dataValues.id,
       })
       this.ctx.status = 200
     } else {
