@@ -40,23 +40,23 @@ class PostController extends Controller {
       comments: ([] = [...comments]),
       reactions: ([] = [...reactions]),
     })
-    this.ctx.body = post
   }
 
   async create() {
     const ctx = this.ctx
     const req = ctx.request.body
     const isLogined = isLogin(ctx)
-    console.log(typeof req.tag_id)
     if (isLogined.role === 'admin' && req.content.length > 0 && req.title.length > 0) {
-      console.log(req)
       const date = new Date(Date.now())
-      ctx.body = await ctx.model.Post.create(
+      const post = await ctx.model.Post.create(
         Object.assign({}, req, {
           create_at: date,
           user_id: isLogined.id,
         }),
       )
+      for (const tag of req.tags) await ctx.service.posttag.createPostTag(post.id, tag)
+
+      ctx.body = post
       ctx.body = {
         me: 'ok',
       }
@@ -112,5 +112,13 @@ class PostController extends Controller {
       this.ctx.status = 200
     } else this.ctx.status = 204
   }
+}
+
+const req = {
+  title: String,
+  content: String,
+  image_url: String,
+  tags: [],
+  author_id: String,
 }
 module.exports = PostController

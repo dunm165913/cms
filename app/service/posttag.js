@@ -20,6 +20,24 @@ class PosttagService extends Service {
       },
     })
   }
+
+  async createPostTag(post_id, tag_id) {
+    const ctx = this.ctx
+    const post = await ctx.service.post.findById(post_id)
+    const tag = await ctx.service.tag.findById(tag_id)
+    console.log(tag)
+    if (!post || !tag) {
+      ctx.body = {
+        message: 'Some thing wrong here!',
+      }
+      return false
+    }
+    await ctx.model.Posttag.create({
+      post_id,
+      tag_id,
+    })
+    return true
+  }
 }
 
 module.exports = PosttagService
