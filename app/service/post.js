@@ -11,7 +11,7 @@ function toInt(str) {
 class PostService extends Service {
   async getAll() {
     const ctx = this.ctx
-    const query = { limit: ctx.query.limit, offset: ctx.query.offset }
+    const query = { limit: ctx.query.limit, offset: ctx.query.offset,order:[['id', 'DESC']]}
     return ctx.model.Post.findAll(query)
   }
 

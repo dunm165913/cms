@@ -1,6 +1,11 @@
 const Controller = require('egg').Controller
 const jwt = require('jsonwebtoken')
 const verify = 'CMS_JavaScript_team'
+const Sequelize = require('sequelize')
+const sequelize = new Sequelize('cms_be', 'postgres', 'postgres', {
+  host: 'localhost',
+  dialect: 'postgres'
+});
 
 function isLogin(ctx) {
   try {
@@ -32,23 +37,27 @@ class PostController extends Controller {
     const ctx = this.ctx
     const req = ctx.request.body
     const isLogined = isLogin(ctx)
-
+    console.log(typeof (req.tag_id))
     if (
       isLogined.role === 'admin' &&
       req.content.length > 0 &&
-      req.tag_id > 0 &&
       req.title.length > 0
     ) {
-    const date = new Date(Date.now())
-    ctx.body = await ctx.model.Post.create(
-      Object.assign({}, req, {
-        create_at: date,
-        user_id: isLogined.id,
-      }),
-    )
-      ctx.status = 200
+      console.log(req)
+      const date = new Date(Date.now())
+      ctx.body = await ctx.model.Post.create(
+        Object.assign({}, req, {
+          create_at: date,
+          user_id: isLogined.id,
+        }),
+      )
+      ctx.body = {
+        me: "ok"
+      }
     } else {
-      ctx.status = 204
+      ctx.body = {
+        me: "loi"
+      }
     }
   }
 
