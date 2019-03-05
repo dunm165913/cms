@@ -4,8 +4,8 @@ const verify = 'CMS_JavaScript_team'
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('cms_be', 'postgres', 'postgres', {
   host: 'localhost',
-  dialect: 'postgres'
-});
+  dialect: 'postgres',
+})
 
 function isLogin(ctx) {
   try {
@@ -25,11 +25,21 @@ function toInt(str) {
 class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
-    const post = await this.ctx.service.post.findPostObject(toInt(this.ctx.params.id))
+    const post = await this.ctx.service.post.findById(toInt(this.ctx.params.id))
     if (!post) {
       this.ctx.status = 404
       return
     }
+    const comments = await ctx.service.comment.getCommentsOfPost(post.id)
+    const reactions = await ctx.service.reaction.getReactionsOfaPost(post.id)
+    const postTags = await ctx.service.posttag.getTagsOfaPost(post.id)
+    const tags = []
+    for (const postTag of postTags) tags.push(await ctx.service.tag.getTagForAPost(postTag.tag_id))
+    return Object.assign({}, post.dataValues, {
+      tags: ([] = [...tags]),
+      comments: ([] = [...comments]),
+      reactions: ([] = [...reactions]),
+    })
     this.ctx.body = post
   }
 
@@ -37,12 +47,8 @@ class PostController extends Controller {
     const ctx = this.ctx
     const req = ctx.request.body
     const isLogined = isLogin(ctx)
-    console.log(typeof (req.tag_id))
-    if (
-      isLogined.role === 'admin' &&
-      req.content.length > 0 &&
-      req.title.length > 0
-    ) {
+    console.log(typeof req.tag_id)
+    if (isLogined.role === 'admin' && req.content.length > 0 && req.title.length > 0) {
       console.log(req)
       const date = new Date(Date.now())
       ctx.body = await ctx.model.Post.create(
@@ -52,11 +58,11 @@ class PostController extends Controller {
         }),
       )
       ctx.body = {
-        me: "ok"
+        me: 'ok',
       }
     } else {
       ctx.body = {
-        me: "loi"
+        me: 'loi',
       }
     }
   }

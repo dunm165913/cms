@@ -6,10 +6,9 @@ module.exports = app => {
       user_id: INTEGER,
       content: STRING,
       title: STRING,
-      image_url:STRING,
+      image_url: STRING,
       create_at: { type: DATE, allowNull: false },
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-
     },
     {
       timestamps: false,

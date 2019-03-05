@@ -25,7 +25,7 @@ class AdminController extends Controller {
   }
 
   async index() {
-    const query ={limit: this.ctx.query.limit, offset: this.ctx.query.offset};
+    const query = { limit: this.ctx.query.limit, offset: this.ctx.query.offset }
     this.ctx.body = await this.ctx.model.Tag.findAll(query)
   }
   async destroy() {
@@ -81,27 +81,27 @@ class AdminController extends Controller {
   }
 
   async create() {
-      const user = this.ctx.request.body
+    const user = this.ctx.request.body
 
-      const user_found = await this.ctx.model.User.findAll({
-        where: {
-          email: user.email,
-        },
+    const user_found = await this.ctx.model.User.findAll({
+      where: {
+        email: user.email,
+      },
+    })
+    if (user_found.length === 0) {
+      await this.ctx.model.User.create({
+        email: user.email,
+        password: bcrypt.hashSync(user.password),
+        name: user.username,
+        role: 'admin',
       })
-      if (user_found.length === 0) {
-        await this.ctx.model.User.create({
-          email: user.email,
-          password: bcrypt.hashSync(user.password),
-          name: user.username,
-          role: 'admin',
-        })
-        this.ctx.status = 200
-      } else {
-        this.ctx.status = 204
-        this.ctx.body = {
-          me: 'email dc su dung',
-        }
+      this.ctx.status = 200
+    } else {
+      this.ctx.status = 204
+      this.ctx.body = {
+        me: 'email dc su dung',
       }
+    }
   }
 }
 module.exports = AdminController

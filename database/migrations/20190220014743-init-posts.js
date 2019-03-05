@@ -8,7 +8,7 @@ module.exports = {
       title: { type: STRING(255), allowNull: false },
       content: { type: STRING, allowNull: false },
       create_at: { type: DATE, allowNull: false },
-      image_url:{type:STRING},
+      image_url: { type: STRING },
       user_id: {
         type: INTEGER,
         references: {
