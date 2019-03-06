@@ -12,6 +12,20 @@ class PosttagService extends Service {
     })
   }
 
+  async deleteFromPostId(post_id) {
+    const posttags = await this.getTagsOfaPost(post_id)
+    for (const posttag of posttags) posttag.destroy()
+  }
+
+  async deleteFromTagId(tag_id) {
+    const posttags = await this.ctx.model.Posttag.findAll({
+      where: {
+        tag_id,
+      },
+    })
+    for (const posttag of posttags) posttag.destroy()
+  }
+
   // Lay toan bo cap post-tag cua mot post
   async getTagsOfaPost(post_id) {
     return await this.ctx.model.Posttag.findAll({
@@ -25,7 +39,6 @@ class PosttagService extends Service {
     const ctx = this.ctx
     const post = await ctx.service.post.findById(post_id)
     const tag = await ctx.service.tag.findById(tag_id)
-    console.log(tag)
     if (!post || !tag) {
       ctx.body = {
         message: 'Some thing wrong here!',

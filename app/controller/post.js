@@ -25,17 +25,19 @@ function toInt(str) {
 class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
-    const post = await this.ctx.service.post.findById(toInt(this.ctx.params.id))
+    const ctx = this.ctx
+    const post = await ctx.service.post.findById(toInt(ctx.params.id))
     if (!post) {
-      this.ctx.status = 404
+      ctx.status = 404
       return
     }
+
     const comments = await ctx.service.comment.getCommentsOfPost(post.id)
     const reactions = await ctx.service.reaction.getReactionsOfaPost(post.id)
     const postTags = await ctx.service.posttag.getTagsOfaPost(post.id)
     const tags = []
-    for (const postTag of postTags) tags.push(await ctx.service.tag.getTagForAPost(postTag.tag_id))
-    return Object.assign({}, post.dataValues, {
+    for (const postTag of postTags) tags.push(await ctx.service.tag.findById(postTag.tag_id))
+    ctx.body = Object.assign({}, post.dataValues, {
       tags: ([] = [...tags]),
       comments: ([] = [...comments]),
       reactions: ([] = [...reactions]),
@@ -54,13 +56,12 @@ class PostController extends Controller {
           user_id: isLogined.id,
         }),
       )
+
       for (const tag of req.tags) await ctx.service.posttag.createPostTag(post.id, tag)
 
-      ctx.body = post
-      ctx.body = {
-        me: 'ok',
-      }
+      ctx.status = 200
     } else {
+      ctx.status = 400
       ctx.body = {
         me: 'loi',
       }
@@ -68,49 +69,48 @@ class PostController extends Controller {
   }
 
   // destroy cái này phải destroy toàn bộ những feld có reference tới nó trước.
-  async destroy() {
-    const isLogined = isLogin(this.ctx)
-    if (isLogined.role === 'admin') {
-      const post = await this.ctx.model.Post.findById(toInt(this.ctx.params.id))
-      if (post) {
-        post.destroy()
-        this.ctx.status = 200
-      }
-      this.ctx.status = 204
-    }
-    this.ctx.status = 204
-  }
   async index() {
-    this.ctx.body = await this.ctx.service.post.getAll()
+    const ctx = this.ctx
+
+    ctx.body = await ctx.service.post.getAll(ctx.query.web_id)
   }
+
   async delete() {
-    const isLogined = isLogin(this.ctx)
+    const ctx = this.ctx
+    const isLogined = isLogin(ctx)
     if (isLogined.role === 'admin') {
-      const post = await this.ctx.model.Post.findById(toInt(this.ctx.request.body.id))
+      const post = await ctx.model.Post.findById(toInt(ctx.request.body.id))
       if (post) {
         post.destroy()
-        this.ctx.status = 200
-        console.log(this.ctx.status)
-      } else this.ctx.status = 204
-    } else this.ctx.status = 204
+        // xoa het posttags
+        await ctx.service.posttag.deleteFromPostId(ctx.request.body.id)
+        ctx.status = 200
+      } else ctx.status = 204
+    } else ctx.status = 204
   }
   async update() {
-    const user = isLogin(this.ctx)
+    const ctx = this.ctx
+    const user = isLogin(ctx)
     if (user.role === 'admin') {
-      await this.ctx.model.Post.update(
+      await ctx.model.Post.update(
         {
-          title: this.ctx.request.body.title,
-          content: this.ctx.request.body.content,
-          tag: this.ctx.request.body.tag,
+          title: ctx.request.body.title,
+          content: ctx.request.body.content,
         },
         {
           where: {
-            id: this.ctx.params.id,
+            id: ctx.params.id,
           },
         },
       )
-      this.ctx.status = 200
-    } else this.ctx.status = 204
+
+      await ctx.service.posttag.deleteFromPostId(ctx.params.id)
+      const postTags = ctx.request.body.tags
+      console.log(postTags)
+      for (const posttag of postTags)
+        await ctx.service.posttag.createPostTag(ctx.params.id, posttag)
+      ctx.status = 200
+    } else ctx.status = 204
   }
 }
 

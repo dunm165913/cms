@@ -9,10 +9,15 @@ function toInt(str) {
 }
 
 class PostService extends Service {
-  async getAll() {
+  async getAll(web_id) {
     const ctx = this.ctx
     const query = { limit: ctx.query.limit, offset: ctx.query.offset, order: [['id', 'DESC']] }
-    return ctx.model.Post.findAll(query)
+    return ctx.model.Post.findAll({
+      query,
+      where: {
+        user_id: web_id,
+      },
+    })
   }
 
   async findById(post_id) {
