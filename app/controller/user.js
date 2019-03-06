@@ -44,7 +44,7 @@ class UserController extends Controller {
   }
   async login() {
     const req = this.ctx.request.body
-    console.log(req)
+    // console.log(req)
     if (req.email.length > 6 && req.password.length > 6) {
       const rs = await this.ctx.model.User.findAll({
         where: { email: req.email },
@@ -64,23 +64,20 @@ class UserController extends Controller {
         )
         return (this.ctx.body = {
           token,
+          id: rs[0].dataValues.id,
+          name: rs[0].dataValues.name,
         })
       }
-      if (rs.length === 0) {
-        return (this.ctx.body = {
-          message: 'TK kho ton tai',
-        })
-      }
-      // console.log(rs);
-      return (this.ctx.body = {
+      this.ctx.body = {
         message: 'sai mat khau',
-      })
-    }
-    return (this.ctx.body = {
-      message: 'loi tham so',
-    })
+        token: {},
+      }
+    } else
+      this.ctx.body = {
+        message: 'loi tham so',
+        token: {},
+      }
   }
-
   async create() {
     const user = this.ctx.request.body
     const user_found = await this.ctx.model.User.findAll({

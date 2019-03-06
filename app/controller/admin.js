@@ -67,19 +67,15 @@ class AdminController extends Controller {
           name: rs[0].dataValues.name,
         })
       }
-      if (rs.length === 0) {
-        return (this.ctx.body = {
-          message: 'TK kho ton tai',
-        })
-      }
-      // console.log(rs);
-      return (this.ctx.body = {
+      this.ctx.body = {
         message: 'sai mat khau',
-      })
-    }
-    return (this.ctx.body = {
-      message: 'loi tham so',
-    })
+        token: {},
+      }
+    } else
+      this.ctx.body = {
+        message: 'loi tham so',
+        token: {},
+      }
   }
 
   async create() {

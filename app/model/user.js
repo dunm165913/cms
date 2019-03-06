@@ -9,7 +9,6 @@ module.exports = app => {
       password: STRING,
       email: STRING,
       role: STRING,
-      web_id: INTEGER,
     },
     {
       timestamps: false,
