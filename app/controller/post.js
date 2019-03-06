@@ -26,9 +26,9 @@ class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
     const ctx = this.ctx
-    const post = await ctx.service.post.findById(toInt(this.ctx.params.id))
+    const post = await ctx.service.post.findById(toInt(ctx.params.id))
     if (!post) {
-      this.ctx.status = 404
+      ctx.status = 404
       return
     }
 
@@ -70,50 +70,43 @@ class PostController extends Controller {
   }
 
   // destroy cái này phải destroy toàn bộ những feld có reference tới nó trước.
-  async destroy() {
-    const isLogined = isLogin(this.ctx)
-    if (isLogined.role === 'admin') {
-      const post = await this.ctx.model.Post.findById(toInt(this.ctx.params.id))
-      if (post) {
-        post.destroy()
-        this.ctx.status = 200
-      }
-      this.ctx.status = 204
-    }
-    this.ctx.status = 204
-  }
   async index() {
-    this.ctx.body = await this.ctx.service.post.getAll()
+    const ctx = this.ctx
+    ctx.body = await ctx.service.post.getAll()
   }
+
   async delete() {
-    const isLogined = isLogin(this.ctx)
+    const ctx = this.ctx
+    const isLogined = isLogin(ctx)
     if (isLogined.role === 'admin') {
-      const post = await this.ctx.model.Post.findById(toInt(this.ctx.request.body.id))
+      const post = await ctx.model.Post.findById(toInt(ctx.request.body.id))
       if (post) {
         post.destroy()
-        this.ctx.status = 200
-        console.log(this.ctx.status)
-      } else this.ctx.status = 204
-    } else this.ctx.status = 204
+        ctx.status = 200
+      } else ctx.status = 204
+    } else ctx.status = 204
   }
   async update() {
-    const user = isLogin(this.ctx)
+    const ctx = this.ctx
+    const user = isLogin(ctx)
     if (user.role === 'admin') {
-      await this.ctx.model.Post.update(
+      await ctx.model.Post.update(
         {
-          title: this.ctx.request.body.title,
-          content: this.ctx.request.body.content,
+          title: ctx.request.body.title,
+          content: ctx.request.body.content,
         },
         {
           where: {
-            id: this.ctx.params.id,
+            id: ctx.params.id,
           },
         },
       )
-      // xoa het posttag voi id tag
-      // sau do tao lai posttag
-      this.ctx.status = 200
-    } else this.ctx.status = 204
+      await ctx.service.posttag.deleteFromPostId(ctx.params.id)
+      const postTags = ctx.request.body.tags
+      for (const posttag of postTags)
+        await ctx.service.posttag.createPostTag(ctx.params.id, posttag)
+      ctx.status = 200
+    } else ctx.status = 204
   }
 }
 
