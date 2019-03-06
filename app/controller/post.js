@@ -71,7 +71,7 @@ class PostController extends Controller {
   // destroy cái này phải destroy toàn bộ những feld có reference tới nó trước.
   async index() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.post.getAll(ctx.request.web_id)
+    ctx.body = await ctx.service.post.getAll(ctx.query.web_id)
   }
 
   async delete() {
