@@ -11,6 +11,21 @@ class PosttagService extends Service {
       },
     })
   }
+  async delete(post_id, tag_id) {
+    await this.ctx.model
+      .findById({
+        where: {
+          post_id,
+          tag_id,
+        },
+      })
+      .destroy()
+  }
+
+  async deleteFromPostId(post_id) {
+    const posttags = await this.getTagsOfaPost(post_id)
+    for (const posttag of posttags) posttag.destroy()
+  }
 
   async deleteFromPostId(post_id) {
     const posttags = await this.getTagsOfaPost(post_id)

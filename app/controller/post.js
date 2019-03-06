@@ -71,8 +71,7 @@ class PostController extends Controller {
   // destroy cái này phải destroy toàn bộ những feld có reference tới nó trước.
   async index() {
     const ctx = this.ctx
-
-    ctx.body = await ctx.service.post.getAll(ctx.query.web_id)
+    ctx.body = await ctx.service.post.getAll(ctx.request.web_id)
   }
 
   async delete() {
@@ -103,10 +102,8 @@ class PostController extends Controller {
           },
         },
       )
-
       await ctx.service.posttag.deleteFromPostId(ctx.params.id)
       const postTags = ctx.request.body.tags
-      console.log(postTags)
       for (const posttag of postTags)
         await ctx.service.posttag.createPostTag(ctx.params.id, posttag)
       ctx.status = 200
