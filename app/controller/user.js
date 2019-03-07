@@ -104,5 +104,16 @@ class UserController extends Controller {
       }
     }
   }
+  // tra ve id site dua vao ten site
+  async getIdSite() {
+    console.log(this.ctx.query)
+    const rs = await this.ctx.model.User.find({
+      where: {
+        name: this.ctx.query.web_name,
+      },
+    })
+    if (rs) this.ctx.body = rs.id
+    else this.ctx.body = -1
+  }
 }
 module.exports = UserController

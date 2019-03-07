@@ -17,6 +17,7 @@ class PostService extends Service {
       where: {
         user_id: web_id,
       },
+      attributes: ['id', 'title', 'create_at'],
     })
   }
 

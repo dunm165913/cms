@@ -2,10 +2,6 @@ const Controller = require('egg').Controller
 const jwt = require('jsonwebtoken')
 const verify = 'CMS_JavaScript_team'
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('cms_be', 'postgres', 'postgres', {
-  host: 'localhost',
-  dialect: 'postgres',
-})
 
 function isLogin(ctx) {
   try {
