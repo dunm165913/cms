@@ -35,7 +35,7 @@ class TagController extends Controller {
   async index() {
     this.ctx.body = await this.ctx.model.Tag.findAll({
       where: {
-        user_id: this.ctx.query.user_id,
+        user_id: this.ctx.query.web_id,
       },
     })
   }

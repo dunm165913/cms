@@ -22,10 +22,10 @@ class PostController extends Controller {
   // get a post instance and get all tag, comment, reaction of this post.
   async show() {
     const ctx = this.ctx
+    console.log(this.ctx.params)
     const post = await ctx.service.post.findById(toInt(ctx.params.id))
     if (!post) {
-      ctx.status = 404
-      return
+      return (ctx.body = {})
     }
 
     const comments = await ctx.service.comment.getCommentsOfPost(post.id)
@@ -105,13 +105,22 @@ class PostController extends Controller {
       ctx.status = 200
     } else ctx.status = 204
   }
+  async getAllPostOfTag() {
+    const tagId = this.ctx.params.id
+    const postTags = await this.ctx.service.posttag.getPostsOfaTag(tagId)
+    // console.log(postTags[0].dataValues)
+    const rs = []
+    for (let i = 0; i < postTags.length; i++) {
+      console.log(postTags[i].dataValues)
+      const post = await this.ctx.service.post.findById(postTags[i].dataValues.post_id)
+      console.log(post)
+      if (post) {
+        post.content = ''
+        rs.push(post)
+      }
+    }
+    this.ctx.body = rs
+  }
 }
 
-const req = {
-  title: String,
-  content: String,
-  image_url: String,
-  tags: [],
-  author_id: String,
-}
 module.exports = PostController

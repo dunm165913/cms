@@ -11,6 +11,7 @@ module.exports = app => {
   router.post('/api/tags/delete', controller.tag.delete)
   router.post('/api/posts/delete', controller.post.delete)
   router.get('/api/web', controller.user.getIdSite)
+  router.get('/api/tags/:id/posts', controller.post.getAllPostOfTag)
 
   // router.get('/apiwkjhfkwsdhfksjhfkjsdhfkjashfk/users', controller.user.index)
   // router.post('/api/users', controller.user.create)

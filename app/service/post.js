@@ -9,6 +9,7 @@ function toInt(str) {
 }
 
 class PostService extends Service {
+  // lay tat ca post cua 1 site
   async getAll(web_id) {
     const ctx = this.ctx
     const query = { limit: ctx.query.limit, offset: ctx.query.offset, order: [['id', 'DESC']] }
@@ -20,10 +21,10 @@ class PostService extends Service {
       attributes: ['id', 'title', 'create_at'],
     })
   }
-
+  // lay chi tiet 1 post
   async findById(post_id) {
     const post = await this.ctx.model.Post.findById(post_id)
-    if (!post) {
+    if (!post || post.user_id != this.ctx.query.user_id) {
       return
     }
     return post
