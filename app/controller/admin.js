@@ -18,18 +18,16 @@ function toInt(str) {
   return parseInt(str, 10) || 0
 }
 
-class UserController extends Controller {
+class AdminController extends Controller {
   async show() {
-    const rs = await this.ctx.model.User.findAll()
+    const rs = await this.ctx.model.Tag.findById(toInt(this.ctx.params.id))
     this.ctx.body = rs
   }
 
   async index() {
-    const ctx = this.ctx
-    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) }
-    ctx.body = await ctx.model.User.findAll(query)
+    const query = { limit: this.ctx.query.limit, offset: this.ctx.query.offset }
+    this.ctx.body = await this.ctx.model.Tag.findAll(query)
   }
-
   async destroy() {
     const isLogined = isLogin(this.ctx)
     console.log(isLogined)
@@ -42,6 +40,7 @@ class UserController extends Controller {
       this.ctx.status = 400
     }
   }
+
   async login() {
     const req = this.ctx.request.body
     // console.log(req)
@@ -78,42 +77,34 @@ class UserController extends Controller {
         token: {},
       }
   }
+
   async create() {
     const user = this.ctx.request.body
+
     const user_found = await this.ctx.model.User.findAll({
       where: {
         email: user.email,
       },
     })
     if (user_found.length === 0) {
-      if (!user.role)
-        await this.ctx.model.User.create({
-          email: user.email,
-          password: bcrypt.hashSync(user.password),
-          name: user.name,
-          role: 'student',
-        })
-      else {
-        this.ctx.model.User.create(user)
-        console.log(user)
-      }
+      const rs = await this.ctx.model.User.create({
+        email: user.email,
+        password: bcrypt.hashSync(user.password),
+        name: user.username,
+        role: 'admin',
+      })
+
+      await this.ctx.model.Tag.create({
+        name: 'undefined',
+        user_id: rs.dataValues.id,
+      })
       this.ctx.status = 200
     } else {
+      this.ctx.status = 204
       this.ctx.body = {
         me: 'email dc su dung',
       }
     }
   }
-  // tra ve id site dua vao ten site
-  async getIdSite() {
-    console.log(this.ctx.query)
-    const rs = await this.ctx.model.User.find({
-      where: {
-        name: this.ctx.query.web_name,
-      },
-    })
-    if (rs) this.ctx.body = rs.id
-    else this.ctx.body = -1
-  }
 }
-module.exports = UserController
+module.exports = AdminController

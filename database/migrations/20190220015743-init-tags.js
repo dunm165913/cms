@@ -6,6 +6,13 @@ module.exports = {
     await queryInterface.createTable('tags', {
       id: { type: INTEGER, autoIncrement: true, primaryKey: true },
       name: { type: STRING(255) },
+      user_id: {
+        type: INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+      },
     })
   },
 

@@ -1,9 +1,8 @@
-'use strict'
-
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    const { INTEGER } = Sequelize
-    await queryInterface.createTable('posttags', {
+module.exports = app => {
+  const { INTEGER } = app.Sequelize
+  const PostTag = app.model.define(
+    'posttag',
+    {
       post_id: {
         type: INTEGER,
         primaryKey: true,
@@ -20,10 +19,10 @@ module.exports = {
           key: 'id',
         },
       },
-    })
-  },
-
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('poststags')
-  },
+    },
+    {
+      timestamps: false,
+    },
+  )
+  return PostTag
 }

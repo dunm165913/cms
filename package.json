@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "egg": "^2.14.2",
+    "egg-cors": "^2.1.2",
     "egg-sequelize": "^4.3.1",
     "eslint-config-prettier": "^3.4.0",
+    "jsonwebtoken": "^8.5.0",
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2"
   },
