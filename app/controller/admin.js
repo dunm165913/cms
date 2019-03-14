@@ -48,8 +48,8 @@ class AdminController extends Controller {
       const rs = await this.ctx.model.User.findAll({
         where: { email: req.email },
       })
-      console.log(rs)
-      if (rs.length > 0 && bcrypt.hashSync(req.password, rs[0].dataValues.password)) {
+      console.log(bcrypt.compareSync(req.password, rs[0].dataValues.password))
+      if (rs.length > 0 && bcrypt.compareSync(req.password, rs[0].dataValues.password)) {
         const token = jwt.sign(
           {
             username: rs[0].dataValues.username,
