@@ -10,6 +10,7 @@ module.exports = app => {
   router.post('/api/admin/login', controller.admin.login)
   router.post('/api/tags/delete', controller.tag.delete)
   router.post('/api/posts/delete', controller.post.delete)
+  router.post('/api/comments/delete', controller.comment.delete)
   router.get('/api/web', controller.user.getIdSite)
   router.get('/api/tags/:id/posts', controller.post.getAllPostOfTag)
 

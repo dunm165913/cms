@@ -25,7 +25,11 @@ class CommentController extends Controller {
   }
 
   async index() {
-    this.ctx.body = await this.ctx.model.Comment.findAll()
+    this.ctx.body = await this.ctx.model.Comment.findAll({
+      where: {
+        post_id: this.ctx.query.post_id,
+      },
+    })
   }
   async destroy() {
     const isLogined = isLogin(this.ctx)
@@ -40,18 +44,42 @@ class CommentController extends Controller {
     }
   }
   async create() {
-    const isLogined = isLogin(this.ctx)
     const req = this.ctx.request.body
     console.log(req)
-    if (Object.keys(isLogined).length > 0 && req.post_id.length > 0 && req.content.length > 0) {
+    if (req.post_id > 0 && req.content.length > 0) {
       await this.ctx.model.Comment.create({
         content: req.content,
         post_id: req.post_id,
-        creator_id: isLogined.id,
+        creator_id: req.name,
       })
       this.ctx.status = 200
     } else {
       this.ctx.status = 204
+    }
+  }
+  async delete() {
+    const user = isLogin(this.ctx)
+    if (user.role == 'admin') {
+      const comment = await this.ctx.model.Comment.findById(this.ctx.request.body.id)
+      if (comment) {
+        const post = await this.ctx.model.Post.findAll({
+          where: {
+            id: comment.post_id,
+            user_id: user.id,
+          },
+        })
+        if (post.length > 0) {
+          comment.destroy()
+
+          this.ctx.body = { message: 'ok' }
+        } else {
+          ;(this.status = 204), (this.ctx.body = { message: 'comment ko thuoc bai viet' })
+        }
+      } else {
+        ;(this.status = 204), (this.ctx.body = { message: 'ko ton tai comment' })
+      }
+    } else {
+      ;(this.status = 204), (this.ctx.body = { message: 'ban ko co quyen' })
     }
   }
 }

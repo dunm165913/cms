@@ -27,11 +27,6 @@ class PosttagService extends Service {
     for (const posttag of posttags) posttag.destroy()
   }
 
-  async deleteFromPostId(post_id) {
-    const posttags = await this.getTagsOfaPost(post_id)
-    for (const posttag of posttags) posttag.destroy()
-  }
-
   async deleteFromTagId(tag_id) {
     const posttags = await this.ctx.model.Posttag.findAll({
       where: {

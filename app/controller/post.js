@@ -76,9 +76,10 @@ class PostController extends Controller {
     if (isLogined.role === 'admin') {
       const post = await ctx.model.Post.findById(toInt(ctx.request.body.id))
       if (post) {
-        post.destroy()
         // xoa het posttags
         await ctx.service.posttag.deleteFromPostId(ctx.request.body.id)
+        await ctx.service.comment.deleteFromPostId(ctx.request.body.id)
+        post.destroy()
         ctx.status = 200
       } else ctx.status = 204
     } else ctx.status = 204

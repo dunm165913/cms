@@ -17,6 +17,14 @@ class CommentService extends Service {
     const comments = await this.getCommentsOfPost(post_id)
     for (const comment of comments) comment.destroy()
   }
+  async deleteFromPostId(post_id) {
+    const comments = await this.ctx.model.Comment.findAll({
+      where: {
+        post_id,
+      },
+    })
+    for (const comment of comments) comment.destroy()
+  }
 }
 
 module.exports = CommentService
